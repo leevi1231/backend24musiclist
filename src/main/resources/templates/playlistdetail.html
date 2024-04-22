@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <title>Music List</title>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="header">
+            <h2 th:text="${playlist.name}"></h2>
+            <p th:text="${playlist.description}"></p>
+        </div>
+
+        <h3>Songs in Playlist</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Artist</th>
+                    <th>Genre</th>
+                    <th>Duration</th>
+                    <th sec:authorize="hasAuthority('ADMIN')">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="song, iterStat : ${playlist.songs}">
+                    <td th:text="${iterStat.count}"></td>
+                    <td th:text="${song.title}"></td>
+                    <td th:text="${song.artist}"></td>
+                    <td>
+                        <ul>
+                            <li th:each="genre : ${song.genre}" th:text="${genre.name}"></li>
+                        </ul>
+                    </td>
+                    <td th:text="${song.duration}"></td>
+                    <td>
+                        <a th:href="@{'/playlists/deleteSong?playlistId=' + ${playlist.playlistId} + '&songId=' + ${song.songId}}"
+                            class="delete-link" sec:authorize="hasAuthority('ADMIN')">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Add Song to Playlist</h2>
+        <form action="/playlists/addSong" method="post">
+            <input type="hidden" name="playlistId" th:value="${playlist.playlistId}" />
+            <select name="songId">
+                <option th:each="song : ${songs}" th:value="${song.songId}" th:text="${song.title}"></option>
+            </select>
+            <button type="submit">Add Song</button>
+        </form>
+
+    </div>
+</body>
+
+</html>

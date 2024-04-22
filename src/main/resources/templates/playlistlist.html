@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <title>Music List</title>
+</head>
+
+<body>
+    <div class="container">
+        <h2>All Playlists</h2>
+
+        <nav>
+            <ul>
+                <li><a th:href="@{/songlist}">Songs</a></li>
+                <li><a th:href="@{/playlistlist}">Playlists</a></li>
+            </ul>
+        </nav>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th sec:authorize="hasAuthority('ADMIN')">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="playlist : ${playlists}">
+                    <td th:text="${playlist.playlistId}"></td>
+                    <td th:text="${playlist.name}"></td>
+                    <td th:text="${playlist.description}"></td>
+                    <td>
+                        <a th:href="@{/playlists/{id}(id=${playlist.playlistId})}">View</a>
+                        <a th:href="@{/playlists/edit/{id}(id=${playlist.playlistId})}">Edit</a>
+                        <a th:href="@{/playlists/delete/{id}(id=${playlist.playlistId})}"
+                            sec:authorize="hasAuthority('ADMIN')">Delete</a>
+
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <a href="/playlists/add">Add New Playlist</a>
+            <a th:href="@{/logout}" class="btn btn-danger">Logout</a>
+        </div>
+    </div>
+</body>
+
+</html>
